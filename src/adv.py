@@ -1,5 +1,7 @@
 from room import Room
 from player import Player
+#  from item import Item
+from item import all_items
 
 # Declare all the rooms
 
@@ -37,6 +39,13 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 room['treasure'].n_to = room['secret']
 
+# Link items to rooms
+room['outside'].item_list = all_items['armor']
+room['foyer'].item_list = [all_items['helmet'].item_name, all_items['shield'].item_name]
+room['overlook'].item_list = all_items['spear']
+room['narrow'].item_list = all_items['diamond']
+room['treasure'].item_list = [all_items['gold'], all_items['ruby'], all_items['emerald']]
+
 #
 # Main
 #
@@ -55,8 +64,37 @@ else:
 
 # Write a loop that:
 while play == "y":  # * Prints the current room name # * Prints the current description
-    move = input(f'{p.name}, you are currently {p.current_location}\nWhere would you like to go? Options(n, s, e, '
-                 f'w)\nDirection: ')
+    move = input(f'{p.name}, you are currently {p.current_location}\nThere is{p.current_location.item_list}'
+                 f' in the room\nWhere would you '
+                 f'like to go? Options(n, s, e, w, '
+                 f'get, take, drop, i'
+                 '\nAction: ')
+
+    if move in ["n", "e", "s", "w"]:
+        new_room = getattr(p.current_location, f'{move}_to')
+        if new_room is None:
+            print("cannot go that way")
+        else:
+            p.current_location = new_room
+
+    elif move in ["get", "take", "drop", "i"]:
+        if move == "get":
+            p.current_inventory.append(p.current_location.item_list)
+        elif move == "take":
+            pass
+        elif move == "drop":
+            pass
+        elif move == "i":
+            print(p.current_inventory)
+
+    else:
+        print("invalid command")
+
+"""
+    if p.current_inventory is None:
+        print("You have no items")
+    else:
+        print(p.current_inventory)
 
     if move == "n":
         if p.current_location.n_to is None:
@@ -87,12 +125,10 @@ while play == "y":  # * Prints the current room name # * Prints the current desc
 
     else:
         print("that is not a valid command. TRY AGAIN!!")
-
+"""
 # * Waits for user input and decides what to do.
 
 
 # If the user enters a cardinal direction, attempt to move to the room there.
 # Print an error message if the movement isn't allowed.
 #
-
-

@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 room = "*"
 player = "*"
+item = "*"
 
 [dev-packages]
 
