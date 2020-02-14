@@ -3,6 +3,7 @@ from player import Player
 #  from item import Item
 from item import all_items
 
+
 # Declare all the rooms
 
 room = {
@@ -40,11 +41,11 @@ room['treasure'].s_to = room['narrow']
 room['treasure'].n_to = room['secret']
 
 # Link items to rooms
-room['outside'].item_list = all_items['armor']
-room['foyer'].item_list = [all_items['helmet'].item_name, all_items['shield'].item_name]
-room['overlook'].item_list = all_items['spear']
-room['narrow'].item_list = all_items['diamond']
-room['treasure'].item_list = [all_items['gold'], all_items['ruby'], all_items['emerald']]
+room['outside'].item_list = [all_items['armor']]
+room['foyer'].item_list = [all_items['helmet']]
+room['overlook'].item_list = [all_items['spear']]
+room['narrow'].item_list = [all_items['diamond']]
+room['treasure'].item_list = [all_items['gold']]
 
 #
 # Main
@@ -64,28 +65,37 @@ else:
 
 # Write a loop that:
 while play == "y":  # * Prints the current room name # * Prints the current description
-    move = input(f'{p.name}, you are currently {p.current_location}\nThere is{p.current_location.item_list}'
+    move = input(f'{p.name}, you are currently at the {p.current_location}\n'
+                 f'There is{p.current_location.item_list}'
                  f' in the room\nWhere would you '
                  f'like to go? Options(n, s, e, w, '
                  f'get, take, drop, i'
-                 '\nAction: ')
+                 '\nAction: ').split(' ')
+    print(move)
+    for key in all_items:
+        key
 
-    if move in ["n", "e", "s", "w"]:
-        new_room = getattr(p.current_location, f'{move}_to')
+    if move[0] in ("n", "e", "s", "w"):
+        new_room = getattr(p.current_location, f'{move[0]}_to')
         if new_room is None:
             print("cannot go that way")
         else:
             p.current_location = new_room
 
-    elif move in ["get", "take", "drop", "i"]:
-        if move == "get":
-            p.current_inventory.append(p.current_location.item_list)
+    elif move[0] and move[1]:
+        print("move 0", move[0])
+        print("move 1", move[1])
+        print("current location item list", p.current_location.item_list)
+        if move[0] == "get" and move[1]:
+            p.current_inventory.append(p.current_location.item_list.pop())
+            print("current inventory", p.current_inventory)
         elif move == "take":
             pass
-        elif move == "drop":
-            pass
-        elif move == "i":
-            print(p.current_inventory)
+        elif move[0] == "drop" and move[1]:
+            p.current_location.item_list.append(p.current_inventory.pop())
+
+        elif move[0] == "open" and move[1] == "i":
+            print("open i", p.current_inventory)
 
     else:
         print("invalid command")

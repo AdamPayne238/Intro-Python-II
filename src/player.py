@@ -3,6 +3,8 @@
 # can be done in 4 ish lines of code
 from item import Item
 
+from room import Room
+
 
 class Player:
     def __init__(self, name, current_location):
@@ -10,8 +12,8 @@ class Player:
         self.current_location = current_location
         self.current_inventory = []
 
-    def get_item(self, item):
-        return self.current_inventory.append(item)
+    def get_item(self):
+        return self.current_inventory.append(Room.item_list.pop())
 
     def drop_item(self):
         pass
